@@ -7,7 +7,7 @@ This project has been developed to find the pattern for the salary range and to 
 [LA_City Employee Payroll](https://controllerdata.lacity.org/Payroll/City-Employee-Payroll-Current-/g9h8-fvhu/data)
 
 ## Data Cleaning
-Removing Unnecessary Columns
+**Removing Unnecessary Columns**
 ```
 > setwd("~/Grad Courses/5250 Visual Analytics/r_script_project")
 > 
@@ -25,7 +25,7 @@ Removing Unnecessary Columns
 > 
 > View(usable_columns)
 ```
-Convert Column Data Type
+**Convert Column Data Type**
 ```
 > library(tidyverse)
 > 
@@ -41,7 +41,7 @@ Convert Column Data Type
 +          ALL_OTHER_PAY=as.integer(ALL_OTHER_PAY))
 >
 ```
-Removing the NA Values
+**Removing the NA Values**
 ```
 > benefit_pay_by_gender<-  usable_columns %>%  
 + group_by(PAY_YEAR, GENDER) %>%  
@@ -94,5 +94,44 @@ Removing the NA Values
 ```
 ![image](https://user-images.githubusercontent.com/75762778/147885466-f813d54c-14f8-4258-9f88-d1df3bb82bbe.png)
 
+**On average, which were the top 10 full-time positions that paid the most from 2013 to 2021?**
+```
+> pay_by_role <- subset(usable_columns, EMPLOYMENT_TYPE == 'FULL_TIME', select=c(MOU_TITLE,
++                                                                                REGULAR_PAY))
+> avg_pay_by_title<-pay_by_role %>%
++   group_by(MOU_TITLE) %>%
++   summarise(AVG_PAY=mean(REGULAR_PAY))
+> 
+> top_ten <- head(arrange(avg_pay_by_title, desc(AVG_PAY)), n = 10)
+> ggplot(top_ten) + 
++   geom_col(aes(x= reorder(MOU_TITLE, AVG_PAY), y=AVG_PAY, fill = MOU_TITLE), show.legend=FALSE) +
++   coord_flip() +
++   scale_fill_manual(values = c(
++     "UNREPRESENTED UNIT - MANAGEMENT BENEFITS" = "#52BE80",
++     "PORT PILOTS" = "lightgrey",
++     "MANAGEMENT ATTORNEYS" = "lightgrey",
++     "FIRE CHIEF OFFICERS" = "lightgrey",
++     "MANAGEMENT EMPLOYEES UNIT" = "lightgrey",
++     "POLICE OFFICERS, CAPTAIN. AND ABOVE" = "lightgrey",
++     "PERSONNEL DIRECTOR" = "lightgrey",
++     "LOS ANGELES PORT POLICE COMMAND OFFICERS" = "lightgrey",
++     "SUPERVISORY PROFESSIONAL UNIT" = "lightgrey",
++     "CONFIDENTIAL ATTORNEYS" = "lightgrey"
++   )) +
++   theme(axis.ticks = element_blank(),
++         panel.background = element_blank(),
++         axis.title.x = element_blank(),
++         axis.title.y = element_blank(),
++         axis.text.x = element_text(size=14),
++         plot.title = element_text(hjust = -1.91, size=20),
++         plot.subtitle = element_text(hjust = -.539)) +
++   scale_y_continuous(limits=c(0,250000),position="right") +
++   ggtitle(label="Top 10 Paying Jobs in Los Angeles from 2013 to 2021",
++           subtitle = "Salary was averaged for all reporting years.") +
++   annotate("text", x=10, y=220000, label="Top paying job earned an 
++ average of $184,739.20", colour= "#247547", fontface=2, size=4.5)
+>
+```
+![image](https://user-images.githubusercontent.com/75762778/147885556-0f2a0aff-1660-4c08-a4f6-c4b747d02fa3.png)
 
 
