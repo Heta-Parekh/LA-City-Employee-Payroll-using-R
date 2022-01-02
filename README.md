@@ -50,3 +50,6 @@ Removing the NA Values
 + na.omit
 > benefit_pay_by_gender <- subset(benefit_pay_by_gender, GENDER!="",GENDER!="UNKNOWN")
 ```
+## Analysis and Visualizations
+Which departments had the highest pay each year from 2013 to 2021?
+![image](https://user-images.githubusercontent.com/75762778/147885345-54a7a635-b9a8-4f84-ad96-e715398c253e.png)
