@@ -25,3 +25,28 @@ Removing Unnecessary Columns
 > 
 > View(usable_columns)
 ```
+Convert Column Data Type
+```
+> library(tidyverse)
+> 
+> usable_columns <- usable_columns %>%
++   mutate(PAY_YEAR=as.character(PAY_YEAR),
++          DEPARTMENT_TITLE = as.character(DEPARTMENT_TITLE),
++          MOU_TITLE = as.character(MOU_TITLE),
++          EMPLOYMENT_TYPE = as.character(EMPLOYMENT_TYPE),
++          GENDER = as.character(GENDER),
++          REGULAR_PAY=as.integer(REGULAR_PAY), 
++          BENEFIT_PAY=as.integer(BENEFIT_PAY),
++          OVERTIME_PAY=as.integer(OVERTIME_PAY),
++          ALL_OTHER_PAY=as.integer(ALL_OTHER_PAY))
+>
+```
+Removing the NA Values
+```
+> benefit_pay_by_gender<-  usable_columns %>%  
++ group_by(PAY_YEAR, GENDER) %>%  
++ summarise(Benefit_Pay=mean(BENEFIT_PAY))
+> benefit_pay_by_gender <- benefit_pay_by_gender %>%
++ na.omit
+> benefit_pay_by_gender <- subset(benefit_pay_by_gender, GENDER!="",GENDER!="UNKNOWN")
+```
