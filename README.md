@@ -134,4 +134,26 @@ This project has been developed to find the pattern for the salary range and to 
 ```
 ![image](https://user-images.githubusercontent.com/75762778/147885556-0f2a0aff-1660-4c08-a4f6-c4b747d02fa3.png)
 
+**Which department generated the highest number of benefits pay each year?**
+```
+> department_by_benefit <- usable_columns %>%
++ group_by(PAY_YEAR, DEPARTMENT_TITLE, EMPLOYMENT_TYPE) %>%
++ summarise (Benefits_Pay = sum(BENEFIT_PAY))
+> department_by_benefit <- filter(department_by_benefit, EMPLOYMENT_TYPE %in% c('FULL_TIME'))
+> department_by_benefit <- department_by_benefit [head(order(department_by_benefit$Benefits_Pay,decreasing=TRUE),10), ]
+library(ggplot2)
+library(scales)
+> ggplot(department_by_benefit, aes(PAY_YEAR, DEPARTMENT_TITLE, fill=Benefits_Pay)) + geom_tile() + scale_fill_gradient(low="grey",high="brown",name="Benefits_Pay",labels=comma) + ggtitle("Water and Power Department generated the highest amount of Benefits Pay in the year 2020") + theme(legend.background = element_rect(fill="lightblue", size=0.5, linetype="solid"))
+```
+![image](https://user-images.githubusercontent.com/75762778/147885590-e0fa2e68-d54c-4880-9f40-812a75811468.png)
+
+**Which gender were given the highest amount of benefits each year?**
+```
+> pivot_benefit_by_gender <- benefit_pay_by_gender %>%
++ pivot_wider(names_from = GENDER, values_from = Benefit_Pay)
+> library(ggplot2)
+ggplot(pivot_benefit_by_gender) + geom_line(aes(x=PAY_YEAR, y=FEMALE, group=1, colour='FEMALE'))+ geom_line(aes(x=PAY_YEAR, y=MALE, group=1, colour='MALE'))+ labs(y="Benefits Pay", x="Pay Year", title=("Comparison analysis of Male and Female for benefits pay"))
+```
+![image](https://user-images.githubusercontent.com/75762778/147885652-b1ecec6b-28b3-40c5-a56c-f5ce5feccced.png)
+
 
