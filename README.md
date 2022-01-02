@@ -51,5 +51,36 @@ Removing the NA Values
 > benefit_pay_by_gender <- subset(benefit_pay_by_gender, GENDER!="",GENDER!="UNKNOWN")
 ```
 ## Analysis and Visualizations
-Which departments had the highest pay each year from 2013 to 2021?
+Which departments had the highest pay each year from 2013 to 2021? 
+```
+> total_by_department<-  usable_columns %>%
++   group_by(PAY_YEAR, DEPARTMENT_TITLE) %>%
++   summarise(TOTAL_PAY=sum(REGULAR_PAY + 
++                             OVERTIME_PAY +
++                             BENEFIT_PAY +
++                             ALL_OTHER_PAY))
+`summarise()` has grouped output by 'PAY_YEAR'. You can override using the `.groups` argument.
+> 
+> max_pay_by_year <-  total_by_department %>% 
++   group_by(PAY_YEAR) %>% 
++   slice(which.max(TOTAL_PAY))
+> 
+> library(ggplot2)
+> 
+> ggplot(data = max_pay_by_year) +
++   geom_col(mapping=aes(x=PAY_YEAR, y=TOTAL_PAY, fill=DEPARTMENT_TITLE)) +
++   theme(panel.background = element_blank(), 
++         axis.text.x = element_text(vjust=15),
++         axis.ticks.x = element_blank(),
++         axis.title.x = element_text(vjust=8),
++         plot.title = element_text(hjust=.92))+
++   scale_y_continuous(name="Total Pay", labels=scales::comma) +
++   scale_x_discrete(name="Pay Year") +
++   ggtitle("The Police Department has had the highest payroll from 2013 to 2021 with the exception of 2020.") +
++   scale_fill_manual(values= c("lightblue", "gray"),
++                     guide = guide_legend(title="Department"))
+```
+
 ![image](https://user-images.githubusercontent.com/75762778/147885345-54a7a635-b9a8-4f84-ad96-e715398c253e.png)
+
+
