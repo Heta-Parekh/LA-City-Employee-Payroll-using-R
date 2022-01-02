@@ -51,7 +51,7 @@ Removing the NA Values
 > benefit_pay_by_gender <- subset(benefit_pay_by_gender, GENDER!="",GENDER!="UNKNOWN")
 ```
 ## Analysis and Visualizations
-Which departments had the highest pay each year from 2013 to 2021? 
+**Which departments had the highest pay each year from 2013 to 2021?** 
 ```
 > total_by_department<-  usable_columns %>%
 +   group_by(PAY_YEAR, DEPARTMENT_TITLE) %>%
@@ -82,5 +82,17 @@ Which departments had the highest pay each year from 2013 to 2021?
 ```
 
 ![image](https://user-images.githubusercontent.com/75762778/147885345-54a7a635-b9a8-4f84-ad96-e715398c253e.png)
+
+**Which department generated the most overtime pay as per year?**
+```
+> User_Defined_Function <- function(usable_columns){
++ overtime_by_department <- aggregate(OVERTIME_PAY ~ PAY_YEAR + DEPARTMENT_TITLE, data=usable_columns, FUN = sum)
++  group_data <- overtime_by_department[order(overtime_by_department$OVERTIME_PAY, decreasing=TRUE),]
++ return(head(group_data,20))
++ }
+> ggplot(User_Defined_Function(usable_columns), aes(PAY_YEAR, OVERTIME_PAY, fill =DEPARTMENT_TITLE)) +  geom_bar( stat = "identity") + ggtitle("Water and Power department has generated the highest overtime pay in the year 2018,2019 and 2020.") + scale_y_continuous(name= "Over-Time Pay",labels=scales::comma) + scale_fill_brewer()
+```
+![image](https://user-images.githubusercontent.com/75762778/147885466-f813d54c-14f8-4258-9f88-d1df3bb82bbe.png)
+
 
 
